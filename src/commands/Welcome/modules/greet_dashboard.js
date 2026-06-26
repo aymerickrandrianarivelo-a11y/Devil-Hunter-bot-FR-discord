@@ -272,7 +272,7 @@ export default {
                         ],
                         flags: MessageFlags.Ephemeral,
                     });
-                    
+                    await interaction.deferUpdate().catch(() => {});
                 } else if (customId === `greet_cfg_ping_welcome_${guildId}`) {
                     cfg.welcomePing = !cfg.welcomePing;
                     await saveWelcomeConfig(client, guildId, cfg);
