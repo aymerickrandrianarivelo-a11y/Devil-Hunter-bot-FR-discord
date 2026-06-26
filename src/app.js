@@ -14,7 +14,13 @@ import { checkGiveaways } from './services/giveawayService.js';
 import { loadCommands, registerCommands as registerSlashCommands } from './handlers/commandLoader.js';
 import pkg from '../package.json' with { type: 'json' };
 import { EXPECTED_SCHEMA_VERSION, EXPECTED_SCHEMA_LABEL } from './config/schemaVersion.js';
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('⚠️ [ERREUR REJETÉE - LE BOT RESTE EN LIGNE] :', reason);
+});
 
+process.on('uncaughtException', (err, origin) => {
+    console.error('⚠️ [EXCEPTION NON CAPTURÉE - LE BOT RESTE EN LIGNE] :', err);
+});
 class TitanBot extends Client {
   constructor() {
     super({
