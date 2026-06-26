@@ -259,6 +259,7 @@ export default {
                         ],
                         flags: MessageFlags.Ephemeral,
                     });
+                    await interaction.deferUpdate().catch(() => {});
                 } else if (customId === `greet_cfg_toggle_goodbye_${guildId}`) {
                     cfg.goodbyeEnabled = !cfg.goodbyeEnabled;
                     await saveWelcomeConfig(client, guildId, cfg);
