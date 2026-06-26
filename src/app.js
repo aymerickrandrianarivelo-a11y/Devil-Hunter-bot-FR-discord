@@ -20,6 +20,18 @@ process.on('unhandledRejection', (reason, promise) => {
 
 process.on('uncaughtException', (err, origin) => {
     console.error('⚠️ [EXCEPTION NON CAPTURÉE - LE BOT RESTE EN LIGNE] :', err);
+    import http from 'http';
+
+// Crée un mini serveur web pour Railway
+http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Bot Discord en ligne !');
+}).listen(process.env.PORT || 3000);
+
+// S'auto-ping toutes les 10 minutes pour ne pas s'endormir
+setInterval(() => {
+    http.get(`http://localhost:${process.env.PORT || 3000}/`);
+}, 600000);
 });
 class TitanBot extends Client {
   constructor() {
