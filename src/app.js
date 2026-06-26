@@ -22,6 +22,8 @@ process.on('uncaughtException', (err, origin) => {
     console.error('⚠️ [EXCEPTION NON CAPTURÉE - LE BOT RESTE EN LIGNE] :', err);
     import http from 'http';
 
+const http = require('http');
+
 // Crée un mini serveur web pour Railway
 http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
