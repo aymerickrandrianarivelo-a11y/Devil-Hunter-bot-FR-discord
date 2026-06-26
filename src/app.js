@@ -1,5 +1,4 @@
-import http from 'http';
-
+const http = require('http');
 // Crée le mini serveur web pour Railway
 http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
