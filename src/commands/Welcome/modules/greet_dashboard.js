@@ -271,6 +271,7 @@ export default {
                         ],
                         flags: MessageFlags.Ephemeral,
                     });
+                    
                 } else if (customId === `greet_cfg_ping_welcome_${guildId}`) {
                     cfg.welcomePing = !cfg.welcomePing;
                     await saveWelcomeConfig(client, guildId, cfg);
