@@ -129,21 +129,65 @@ function buildButtonRow(cfg, guildId, disabled = false) {
     ];
 }
 
-async function refreshDashboard(rootInteraction, cfg, guildId) {
-    try {
-        const selectMenu = buildSelectMenu(guildId);
-        await InteractionHelper.safeEditReply(rootInteraction, {
-            embeds: [buildDashboardEmbed(cfg, rootInteraction.guild)],
-            components: [
-                ...buildButtonRow(cfg, guildId),
-                new ActionRowBuilder().addComponents(selectMenu),
-            ],
-        });
-    } catch (error) {
-        logger.debug('Could not refresh greet dashboard (interaction may have expired):', error.message);
-    }
-}
+btnCollector.on('collect', async btnInteraction => {
+                try {
+                    // 1. On prévient Discord immédiatement pour bloquer les 3 secondes
+                    await btnInteraction.deferReply({ flags: MessageFlags.Ephemeral }).catch(() => null);
+                } catch (err) {
+                    logger.debug('Button interaction already expired:', err.message);
+                    return;
+                }
+                const customId = btnInteraction.customId;
 
+                if (customId === `greet_cfg_toggle_welcome_${guildId}`) {
+                    cfg.enabled = !cfg.enabled;
+                    await saveWelcomeConfig(client, guildId, cfg);
+                    // 2. On utilise editReply au lieu de followUp car on a fait un deferReply !
+                    await btnInteraction.editReply({
+                        embeds: [
+                            successEmbed(
+                                '✅ Welcome Updated',
+                                `Welcome messages are now **${cfg.enabled ? 'enabled' : 'disabled'}**.`,
+                            ),
+                        ],
+                    });
+                } else if (customId === `greet_cfg_toggle_goodbye_${guildId}`) {
+                    cfg.goodbyeEnabled = !cfg.goodbyeEnabled;
+                    await saveWelcomeConfig(client, guildId, cfg);
+                    await btnInteraction.editReply({
+                        embeds: [
+                            successEmbed(
+                                '✅ Goodbye Updated',
+                                `Goodbye messages are now **${cfg.goodbyeEnabled ? 'enabled' : 'disabled'}**.`,
+                            ),
+                        ],
+                    });
+                } else if (customId === `greet_cfg_ping_welcome_${guildId}`) {
+                    cfg.welcomePing = !cfg.welcomePing;
+                    await saveWelcomeConfig(client, guildId, cfg);
+                    await btnInteraction.editReply({
+                        embeds: [
+                            successEmbed(
+                                '✅ Welcome Ping Updated',
+                                `Joining users will${cfg.welcomePing ? '' : ' **not**'} be pinged in the welcome message.`,
+                            ),
+                        ],
+                    });
+                } else if (customId === `greet_cfg_ping_goodbye_${guildId}`) {
+                    cfg.goodbyePing = !cfg.goodbyePing;
+                    await saveWelcomeConfig(client, guildId, cfg);
+                    await btnInteraction.editReply({
+                        embeds: [
+                            successEmbed(
+                                '✅ Goodbye Ping Updated',
+                                `Leaving users will${cfg.goodbyePing ? '' : ' **not**'} be pinged in the goodbye message.`,
+                            ),
+                        ],
+                    });
+                }
+
+                await refreshDashboard(interaction, cfg, guildId);
+            });
 export default {
     prefixOnly: false,
     async execute(interaction, config, client) {
