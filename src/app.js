@@ -436,14 +436,4 @@ try {
 }
 
 export default TitanBot;
-// Bloc Anti-Dodo placé tout à la fin du fichier
-import('http').then((http) => {
-    http.createServer((req, res) => {
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end('Bot Discord en ligne !');
-    }).listen(process.env.PORT || 3000);
 
-    setInterval(() => {
-        http.get(`http://localhost:${process.env.PORT || 3000}/`);
-    }, 600000);
-}).catch(err => console.error("Erreur anti-dodo :", err));
