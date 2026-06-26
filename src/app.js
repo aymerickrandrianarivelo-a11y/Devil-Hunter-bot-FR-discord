@@ -1,4 +1,17 @@
-﻿import 'dotenv/config';
+import http from 'http';
+
+// Crée le mini serveur web pour Railway
+http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Bot Discord en ligne !');
+}).listen(process.env.PORT || 3000);
+
+// S'auto-ping toutes les 10 minutes pour rester éveillé
+setInterval(() => {
+    http.get(`http://localhost:${process.env.PORT || 3000}/`);
+}, 600000);
+// LE RESTE DE TON CODE AVEC LES AUTRES IMPORTS CONTINUE EN DESSOUS...
+import 'dotenv/config';
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import express from 'express';
@@ -24,16 +37,7 @@ process.on('uncaughtException', (err, origin) => {
 
 const http = require('http');
 
-// Crée un mini serveur web pour Railway
-http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Bot Discord en ligne !');
-}).listen(process.env.PORT || 3000);
 
-// S'auto-ping toutes les 10 minutes pour ne pas s'endormir
-setInterval(() => {
-    http.get(`http://localhost:${process.env.PORT || 3000}/`);
-}, 600000);
 });
 class TitanBot extends Client {
   constructor() {
