@@ -33,7 +33,6 @@ process.on('unhandledRejection', (reason, promise) => {
 
 process.on('uncaughtException', (err, origin) => {
     console.error('⚠️ [EXCEPTION NON CAPTURÉE - LE BOT RESTE EN LIGNE] :', err);
-    import http from 'http';
 
 const http = require('http');
 
@@ -437,10 +436,7 @@ try {
 }
 
 export default TitanBot;
-// ... tout ton code actuel (imports, initialisation du bot, etc.) ...
-// ... qui se termine par exemple par un client.login() ou autre ...
-
-// ⬇️ TU LE COLLES TOUT EN BAS ICI :
+// Bloc Anti-Dodo placé tout à la fin du fichier
 import('http').then((http) => {
     http.createServer((req, res) => {
         res.writeHead(200, { 'Content-Type': 'text/plain' });
